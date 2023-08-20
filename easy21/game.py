@@ -1,19 +1,17 @@
 from copy import deepcopy
 from random import choice, choices
 from random import randint, random
-from typing import Optional
+from typing import Optional, Any, Dict, Iterator
 from typing import Tuple, List
 
 from easy21.data import Policy
 from easy21.data import State, Action
 
-
-def get_all_possible_actions() -> List[Action]:
-    return [Action.HIT, Action.STICK]
+ALL_POSSIBLE_ACTIONS = [Action.HIT, Action.STICK]
 
 
 def new_card() -> int:
-    value = randint(1, 11)
+    value = randint(1, 10)
     if random() < 1 / 3:  # red card
         value = -value
     return value
@@ -61,7 +59,7 @@ def sample_policy(policy: Policy, state: State) -> Action:
         actions = list(policy[state].keys())
         probabilities = list(policy[state].values())
         return choices(actions, probabilities, k=1)[0]
-    return choice(get_all_possible_actions())
+    return choice(ALL_POSSIBLE_ACTIONS)
 
 
 def generate_episode_from_policy(policy: Policy) -> List[Tuple[State, Action, int]]:
@@ -77,3 +75,18 @@ def generate_episode_from_policy(policy: Policy) -> List[Tuple[State, Action, in
         state = new_state
 
     return history
+
+
+def initialize_memory(action_value: Any) -> Dict[State, Dict[Action, Any]]:
+    memory = {}
+    for state in all_possible_states():
+        memory[state] = {}
+        for action in ALL_POSSIBLE_ACTIONS:
+            memory[state][action] = action_value
+    return memory
+
+
+def all_possible_states() -> Iterator[State]:
+    for dealer_card in range(1, 11):
+        for player_sum in range(1, 22):
+            yield State(dealer_card, player_sum)
