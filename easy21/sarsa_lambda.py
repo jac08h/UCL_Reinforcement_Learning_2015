@@ -1,17 +1,17 @@
 from collections import defaultdict
-from typing import Dict
+from typing import Dict, Tuple
 
-from easy21.data import Action, State, Policy
+from easy21.data import Action, State, Policy, Q_values
 from easy21.game import sample_policy, initialize_state, step, ALL_POSSIBLE_ACTIONS, initialize_memory, \
     all_possible_states
-from easy21.graphics import plot_policy
 from easy21.utils import epsilon_greedy_policy_improvement
 
 
 def sarsa_lambda(policy: Policy,
                  lmbd: float,
                  n_terminate: int,
-                 n_0: float = 100):
+                 n_0: float = 100
+                 ) -> Tuple[Policy, Q_values]:
     q_values = initialize_memory(0.0)  # Q(s, a)
     q_values[None] = defaultdict(int)
     counts = initialize_memory(0.0)  # N(s, a)
@@ -45,6 +45,4 @@ def sarsa_lambda(policy: Policy,
 
 
 if __name__ == '__main__':
-    policy = {}
-    Q, policy = sarsa_lambda(policy, 0, 10000)
-    plot_policy(Q)
+    q_values, policy = sarsa_lambda({}, 1, 1000)

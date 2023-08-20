@@ -19,3 +19,4 @@ class State:
 
 Policy = Dict[State, Dict[Action, float]]
 Episode = List[Tuple[State, Action, float]]
+Q_values = Dict[State, Dict[Action, float]]
